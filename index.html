@@ -46,7 +46,6 @@
         var email = user.email;
         var username = email.match(/[^@]+/)[0];
         var username = username.replace(/[^\w]/, "");
-        console.log(username);
         $().ready( function(){
           $('#content').load('chat.html', function() {
             var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
