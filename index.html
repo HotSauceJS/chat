@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>G-Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="firechat-default.css" />
+    <script src="firechat-default.js"></script>
+
+    <script>
+      var chatRef = new Firebase('https://gchat.firebaseIO.com');
+      var auth = new FirebaseSimpleLogin(chatRef, function(error, user) {
+        if (error) {
+          console.log(error);
+        } else if (user) {
+          loadChat(user);
+        } else {
+          loadLogin();
+        }
+      });
+
+      var loadLogin = function() {
+        $().ready( function(){
+          $('#content').load('login.html', function() {
+            $('#login').click(login);
+          });
+        });
+      };
+
+      var login = function(e){
+        e.preventDefault();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        auth.login('password', {
+          email: email,
+          password: password,
+          rememberMe: true
+        });
+      };
+
+      var loadChat = function(user) {
+        var email = user.email;
+        var username = email.match(/[^@]+/)[0];
+        var username = username.replace(/[^\w]/, "");
+        console.log(username);
+        $().ready( function(){
+          $('#content').load('chat.html', function() {
+            var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+            chat.setUser(user.id, username);
+          });
+        });
+      };
+    </script>
+
+  </head>
+  <body>
+    <div id="content">
+
+    </div>
+  </body>
+</html>
