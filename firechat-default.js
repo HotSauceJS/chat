@@ -701,6 +701,7 @@ this["FirechatDefaultTemplates"]["templates/user-search-list-item.html"] = funct
     return this._isModerator;
   };
 })(Firebase);
+
 (function($) {
 
 
@@ -1580,6 +1581,12 @@ this["FirechatDefaultTemplates"]["templates/user-search-list-item.html"] = funct
       if ((e.which === 13) && (message !== '')) {
         $textarea.val('');
         self._chat.sendMessage(roomId, message);
+        
+        var re = /^@/;
+        if (re.test(message)) {
+          $.post("http://hstext.herokuapps.com/mention", {message:message});
+        }
+
         return false;
       }
     });
